@@ -34,6 +34,5 @@ class ArealLoss(nn.Module):
         self.criterion_2 = JaccardLoss(n_classes=num_classes)
 
     def forward(self, x, y):
-
         return self.criterion_1(x, y) + self.criterion_2(x, y)
 
