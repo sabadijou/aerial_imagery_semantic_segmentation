@@ -16,12 +16,12 @@ optimizer = dict(
 
 epochs = 12
 batch_size = 8
-total_iter = (88880 // batch_size) * epochs
-import math
+
+
 scheduler = dict(
-    type = 'LambdaLR',
-    lr_lambda = lambda _iter : math.pow(1 - _iter/total_iter, 0.9)
-)
+    step_size=1,
+    gamma=0.5
+    )
 
 eval_ep = 6
 save_ep = epochs
