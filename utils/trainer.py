@@ -24,7 +24,7 @@ class Trainer:
         self.model = model
         self.train_dataloader = self.dataset.train_dataloader
         self.test_dataloader = self.dataset.test_dataloader
-        self.criterion = ArealLoss(num_classes=cfg.num_classes)
+        self.criterion = ArealLoss(cfg, num_classes=cfg.num_classes)
         self.optimizer_builder = ArealOptim(cfg, model.parameters())
         self.optimizer = self.optimizer_builder.net_optimizer
         self.lr_scheduler = self.optimizer_builder.lr_scheduler
