@@ -12,7 +12,7 @@ PyTorch implementation of UNet for semantic segmentation of aerial imagery
 </p>
 </html>
 
-## Upcoming Task
+## Upcoming Tasks
 1. Complete the self-supervised part of the repository and train the encoder on our unlabeled dataset.
 2. Implement dataloaders and evaluation metrics for FloodNet, and EarthVision challenges.
 3. Add Distributed Data-Parallel strategy to the repository to enable multi-GPUs training.
