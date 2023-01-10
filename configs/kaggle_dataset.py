@@ -1,6 +1,3 @@
-net = dict(
-    type='RESANet',
-)
 
 backbone = dict(
     type='ResNetWrapper',
@@ -11,23 +8,6 @@ backbone = dict(
     fea_stride=8,
 )
 
-resa = dict(
-    type='RESA',
-    alpha=2.0,
-    iter=4,
-    input_channel=128,
-    conv_stride=9,
-)
-
-decoder = 'PlainDecoder'
-
-trainer = dict(
-    type='RESA'
-)
-
-evaluator = dict(
-    type='CULane',
-)
 
 optimizer = dict(
   type='sgd',
@@ -45,8 +25,6 @@ scheduler = dict(
     lr_lambda = lambda _iter : math.pow(1 - _iter/total_iter, 0.9)
 )
 
-loss_type = 'dice_loss'
-seg_loss_weight = 2.
 eval_ep = 6
 save_ep = epochs
 
@@ -66,22 +44,13 @@ dataset = dict(
     train=dict(
         type='CULane',
         img_path=dataset_path,
-        data_list='train_gt.txt',
-    ),
-    val=dict(
-        type='CULane',
-        img_path=dataset_path,
-        data_list='test.txt',
-    ),
-    test=dict(
-        type='CULane',
-        img_path=dataset_path,
-        data_list='test.txt',
-    )
+        data_list='train_gt.txt'
+
+)
 )
 
 
-workers = 12
-num_classes = 4 + 1
+workers = 1
+num_classes = 6
 ignore_label = 255
 log_interval = 500
