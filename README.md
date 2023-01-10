@@ -3,13 +3,14 @@
 PyTorch implementation of UNet for semantic segmentation of aerial imagery
 1. This repository enables training UNet with various encoders like ResNet18, ResNet34, etc.
 2. Uses a compound (Cross-Entropy + Jaccard loss) loss to train the network.
-3. You can quickly use a custom dataset to train this repository.
+3. You can quickly use a custom dataset to train the model.
 4. Contains a self-supervised method to train network encoder on unlabeled data (Upcoming task).
 
 
 ## Upcoming Task
 1. Complete the self-supervised part of the repository and train the encoder on our unlabeled dataset.
 2. Implement dataloaders and evaluation metrics for FloodNet, and EarthVision challenges.
+3. Add Distributed Data-Parallel strategy to the repository to enable multi-GPUs training.
 
 ## Get started
 1. Clone the repository
@@ -39,7 +40,7 @@ PyTorch implementation of UNet for semantic segmentation of aerial imagery
     ```
 4. Download and extract dataset
    Download and extract this [Kaggle Dataset](https://www.kaggle.com/humansintheloop/semantic-segmentation-of-aerial-imagery)
-   #### Note: this repository is still developing, and this dataset is used for testing the repository. Our model could achieve 81.0 segmentation accuracy on this dataset.
+   #### Note: this repository is still developing, and this dataset is used for testing the model. Our model could achieve 81.0% segmentation accuracy on this dataset.
    ```
    semantic-segmentation-of-aerial-imagery/
                   ├── Tile 1
@@ -58,23 +59,16 @@ PyTorch implementation of UNet for semantic segmentation of aerial imagery
                   └── classes
    
    ```
-  ## Get started
-  1. Simply open train.py in a python editor and customize the hyperparameters section.
+  ## Training 
+  The following command is prepared as an example for training the network. You can customize the parameters to train the default version.
+   #### Note that this repository still not supports multi-GPUs training.
   ```Shell
-  batch_size = 32
-  num_workers = 32
-  using_pixpro = True   # True if using SSL for using backbone to implement segmentation tasks,
-                        # False if using SSL for using backbone to implement classification tasks,
-  num_of_gpus = torch.cuda.device_count()
-  image_folder_path = r'image_folder_path'
-  # Define the backbone
-  backbone = models.resnet34(pretrained=True)
-  hidden_layer_pixel = 'layer4'
+  python train.py --dataset_path Semantic_segmentation_dataset --encoder resnet34 --encoder_weights imagenet --gpu_id 0 --gpus 1
   ```
-  2. Run train.py
 
-  ## Acknowledgement
-<!--ts-->
-* [open-mmlab/mmselfsup](https://github.com/open-mmlab/mmselfsup)
-* [lucidrains/pixel-level-contrastive-learning](https://github.com/lucidrains/pixel-level-contrastive-learning)
-<!--te-->
+  ## Demo
+1. Inference Demo with a Pre-trained model.
+   You can download a pretrain model from here and customize the following command to run the demo 
+  ```Shell
+  python demo.py --checkpoint checkpoints/best.pth --image_path demo/sample_1.jpg --fname demo/result_1.jpg --gpu_id 0
+  ```
