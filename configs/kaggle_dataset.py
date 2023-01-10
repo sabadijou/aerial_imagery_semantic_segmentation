@@ -1,6 +1,6 @@
 unet = dict(
     backbone='resnet34',
-    pretrained=True,
+    pretrained='imagenet',
     encoder_depth=5,
     input_ch=3
 )
@@ -31,9 +31,9 @@ img_norm = dict(
     std=[1., 1., 1.]
 )
 
-img_height = 288
-img_width = 800
-cut_height = 240
+img_height = 512
+img_width = 512
+
 
 dataset_path = r'D:\Datasets\image\areal\Semantic segmentation dataset'
 dataset = dict(
@@ -42,5 +42,4 @@ dataset = dict(
 
 workers = 1
 num_classes = 6
-ignore_label = 255
-log_interval = 500
+current_epoch = 0
