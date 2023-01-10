@@ -32,7 +32,6 @@ class ArealDataset(torch.utils.data.Dataset):
         self.bin_classes = ['Water', 'Land', 'Road', 'Building', 'Vegetation', 'Unlabeled']
 
     def __getitem__(self, idx):
-        print(self.IMG_NAMES)
         img_path = self.IMG_NAMES[idx]
         mask_path = img_path.replace('images', 'masks').replace('.jpg', '.png')
         image = cv2.imread(img_path)
@@ -70,7 +69,7 @@ class ArealDataset(torch.utils.data.Dataset):
         cls_mask = cv2.resize(cls_mask, (512, 512))
         image = np.moveaxis(image, -1, 0)
 
-        return torch.tensor(image).float(), torch.tensor(cls_mask, dtype=torch.int64)
+        return torch.tensor(image).float().to('cuda'), torch.tensor(cls_mask, dtype=torch.int64).to('cuda')
 
     def __len__(self):
         return len(self.IMG_NAMES)
