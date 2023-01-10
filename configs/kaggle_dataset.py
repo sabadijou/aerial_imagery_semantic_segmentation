@@ -14,7 +14,7 @@ optimizer = dict(
 
 epochs = 100
 batch_size = 4
-world_size=1
+world_size = 1
 
 scheduler = dict(
     step_size=1,
