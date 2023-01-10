@@ -43,5 +43,6 @@ class Trainer:
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
+            print(loss)
             batch_loss_list.append(loss.cpu().detach().numpy())
             auc_list.append(self.metrics.accuracy(y, y_pred).numpy())
