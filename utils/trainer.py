@@ -1,10 +1,12 @@
-import sys
 
-from dataset.dataset import ArealDataset
 from utils.dataset_builder import Builder
-from utils.losses import ArealLoss
 from utils.optimizer import ArealOptim
 from utils.evaluation import Metrics
+from utils.losses import ArealLoss
+import numpy as np
+import torch
+import sys
+import os
 
 
 class Trainer:
@@ -14,7 +16,7 @@ class Trainer:
                                batch_size=cfg.batch_size,
                                train_test_split_p=cfg.dataset['train_test_split'],
                                workers=cfg.workers)
-
+        self.cfg = cfg
         self.epochs = cfg.epochs
         self.model = model
         self.train_dataloader = self.dataset.train_dataloader
@@ -24,13 +26,14 @@ class Trainer:
         self.optimizer = self.optimizer_builder.net_optimizer
         self.lr_scheduler = self.optimizer_builder.lr_scheduler
         self.metrics = Metrics()
-
+        self.best_auc = 0
 
     def run_train(self):
-        self.model.train()
         for epoch in range(self.epochs):
+            self.cfg.current_epoch = epoch
+            self.model.train()
             self.train_step()
-
+            self.evaluation()
             if epoch % 5 == 0 and epoch > 0:
                 self.lr_scheduler.step()
 
@@ -43,6 +46,39 @@ class Trainer:
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
-            print(loss)
             batch_loss_list.append(loss.cpu().detach().numpy())
             auc_list.append(self.metrics.accuracy(y, y_pred).numpy())
+            sys.stdout.write(
+                "\r[Epoch %d/%d] [Batch %d/%d] [Loss: %f (%f)] [Learning Rate: %f]"
+                % (
+                    self.cfg.current_epoch,
+                    self.cfg.epochs,
+                    batch_idx + 1,
+                    len(self.train_dataloader),
+                    loss.cpu().detach().numpy(),
+                    np.mean(auc_list),
+                    self.optimizer.param_groups[0]['lr']
+                )
+            )
+
+    def evaluation(self):
+        self.model.eval()
+        val_loss_list = []
+        val_acc_list = []
+        for batch_idx, (x, y) in enumerate(self.test_dataloader):
+            with torch.no_grad():
+                y_pred = self.model(x)
+            val_loss = self.criterion(y_pred, y)
+            val_loss_list.append(val_loss.cpu().detach().numpy())
+            val_acc_list.append(self.metrics.accuracy(y, y_pred).numpy())
+
+        print('Validation loss : {:.5f} - Validation Accuracy : {:.2f}'.format(self.cfg.current_epoch,
+                                                                               np.mean(val_loss_list),
+                                                                               np.mean(val_acc_list)))
+        if self.best_auc < np.mean(val_acc_list):
+            self.best_auc = np.mean(val_acc_list)
+            self.save_checkpoint()
+
+    def save_checkpoint(self):
+        os.makedirs('checkpoints', exist_ok=True)
+        torch.save(self.model.state_dict(), 'checkpoints/best.pth')
