@@ -1,4 +1,3 @@
-import sys
 
 import torch
 import torch.nn as nn
@@ -28,10 +27,10 @@ class JaccardLoss(nn.Module):
 
 
 class ArealLoss(nn.Module):
-    def __init__(self, num_classes=6):
+    def __init__(self, cfg, num_classes=6):
         super(ArealLoss, self).__init__()
         weights = torch.ones(num_classes)
-        weights = weights.cuda()
+        weights = weights.to(cfg.device)
         self.criterion_1 = torch.nn.CrossEntropyLoss(weight=weights)
         self.criterion_2 = JaccardLoss(n_classes=num_classes)
 
