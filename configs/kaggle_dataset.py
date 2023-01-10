@@ -42,9 +42,9 @@ cut_height = 240
 dataset_path = r'D:\Datasets\image\areal\Semantic segmentation dataset'
 dataset = dict(
     train=dict(
-        type='CULane',
+        type='',
         img_path=dataset_path,
-        data_list='train_gt.txt'
+        data_list=''
 
 )
 )
