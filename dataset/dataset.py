@@ -5,6 +5,7 @@ Modified by https://github.com/sabadijou
 '''
 
 import torchvision.transforms as transforms
+from configs.kaggle_dataset import device
 from scipy import ndimage
 import torch.utils.data
 from glob import glob
@@ -69,7 +70,7 @@ class ArealDataset(torch.utils.data.Dataset):
         cls_mask = cv2.resize(cls_mask, (512, 512))
         image = np.moveaxis(image, -1, 0)
 
-        return torch.tensor(image).float().to('cuda'), torch.tensor(cls_mask, dtype=torch.int64).to('cuda')
+        return torch.tensor(image).float().to(device), torch.tensor(cls_mask, dtype=torch.int64).to(device)
 
     def __len__(self):
         return len(self.IMG_NAMES)
