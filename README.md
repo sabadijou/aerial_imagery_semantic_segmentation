@@ -7,7 +7,7 @@ PyTorch implementation of UNet for semantic segmentation of aerial imagery
 4. Contains a self-supervised method to train network encoder on unlabeled data (Upcoming task).
 <html>
 <p align="center">
-   <img width="600" height="200" src="https://raw.githubusercontent.com/sabadijou/aerial_imagery_semantic_segmentation/main/demo/result.png">
+   <img width="600" height="600" src="https://raw.githubusercontent.com/sabadijou/aerial_imagery_semantic_segmentation/main/demo/result.png">
 
 </p>
 </html>
