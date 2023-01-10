@@ -8,6 +8,7 @@ PyTorch implementation of UNet for semantic segmentation of aerial imagery
 <html>
 <p align="center">
 <img width="600" height="600" src="https://raw.githubusercontent.com/sabadijou/aerial_imagery_semantic_segmentation/main/demo/result.png">
+    <br>
 <em>Example of the network outputs visualization</em>
 </p>
 </html>
