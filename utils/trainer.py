@@ -23,12 +23,16 @@ class Trainer:
         self.criterion = ArealLoss(num_classes=num_classes)
         self.optimizer_builder = ArealOptim(cfg, model.parameters())
         self.optimizer = self.optimizer_builder.net_optimizer
+        self.lr_scheduler = self.optimizer_builder.lr_scheduler
         self.metrics = Metrics()
 
     def run_train(self):
         self.model.train()
         for epoch in range(self.epochs):
-            loss_epoch = self.train_step()
+            self.train_step()
+
+            if epoch % 5 == 0 and epoch > 0:
+                self.lr_scheduler.step()
 
     def train_step(self):
         batch_loss_list = []
