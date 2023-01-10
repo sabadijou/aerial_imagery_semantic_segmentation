@@ -1,3 +1,5 @@
+import sys
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -30,9 +32,11 @@ class ArealLoss(nn.Module):
         super(ArealLoss, self).__init__()
         weights = torch.ones(num_classes)
         weights = weights.cuda()
-        self.criterion_1 = torch.nn.NLLLoss(weight=weights, reduction='mean').cuda()
+        self.criterion_1 = torch.nn.CrossEntropyLoss(weight=weights)
         self.criterion_2 = JaccardLoss(n_classes=num_classes)
 
     def forward(self, x, y):
-        return self.criterion_1(x, y) + self.criterion_2(x, y)
+        loss_1 = self.criterion_1(x, self.criterion_2.to_one_hot(y))
+        loss_2 = self.criterion_2(x, y)
+        return loss_1 + loss_2
 
