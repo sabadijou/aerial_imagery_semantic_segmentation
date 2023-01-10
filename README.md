@@ -6,7 +6,7 @@ PyTorch implementation of UNet for semantic segmentation of aerial imagery
 3. You can quickly use a custom dataset to train the model.
 4. Contains a self-supervised method to train network encoder on unlabeled data (Upcoming task).
 
-
+![sample_results](https://raw.githubusercontent.com/sabadijou/aerial_imagery_semantic_segmentation/main/demo/result.png)
 ## Upcoming Task
 1. Complete the self-supervised part of the repository and train the encoder on our unlabeled dataset.
 2. Implement dataloaders and evaluation metrics for FloodNet, and EarthVision challenges.
