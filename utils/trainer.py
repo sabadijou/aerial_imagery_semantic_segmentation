@@ -1,4 +1,5 @@
 
+from torch.utils.tensorboard import SummaryWriter
 from utils.dataset_builder import Builder
 from utils.optimizer import ArealOptim
 from utils.evaluation import Metrics
@@ -7,6 +8,8 @@ import numpy as np
 import torch
 import sys
 import os
+
+writer = SummaryWriter(comment='Metrics')
 
 
 class Trainer:
@@ -27,15 +30,19 @@ class Trainer:
         self.lr_scheduler = self.optimizer_builder.lr_scheduler
         self.metrics = Metrics()
         self.best_auc = 0
+        self.total_batch_counter = 0
 
     def run_train(self):
         for epoch in range(self.epochs):
             self.cfg.current_epoch = epoch
             self.model.train()
-            self.train_step()
-            self.evaluation()
+            batch_loss_list_ = self.train_step()
+            val_loss_list_ = self.evaluation()
             if epoch % 5 == 0 and epoch > 0:
                 self.lr_scheduler.step()
+            writer.add_scalar('Lr/Epoch', self.optimizer.param_groups[0]['lr'], epoch)
+            writer.add_scalar('Train Loss/Epoch', np.mean(batch_loss_list_), epoch)
+            writer.add_scalar('Validation Loss/Epoch', np.mean(val_loss_list_), epoch)
 
     def train_step(self):
         batch_loss_list = []
@@ -48,6 +55,7 @@ class Trainer:
             self.optimizer.step()
             batch_loss_list.append(loss.cpu().detach().numpy())
             auc_list.append(self.metrics.accuracy(y, y_pred).numpy())
+            writer.add_scalar('Loss/Batch', loss, self.total_batch_counter)
             sys.stdout.write(
                 "\r[Epoch %d/%d] [Batch %d/%d] [Loss: %f (%f)] [Learning Rate: %f]"
                 % (
@@ -60,6 +68,8 @@ class Trainer:
                     self.optimizer.param_groups[0]['lr']
                 )
             )
+            self.total_batch_counter += 1
+        return batch_loss_list
 
     def evaluation(self):
         self.model.eval()
@@ -69,15 +79,15 @@ class Trainer:
             with torch.no_grad():
                 y_pred = self.model(x)
             val_loss = self.criterion(y_pred, y)
-            val_loss_list.append(val_loss.cpu().detach().numpy())
-            val_acc_list.append(self.metrics.accuracy(y, y_pred).numpy())
-
-        print('Validation loss : {:.5f} - Validation Accuracy : {:.2f}'.format(self.cfg.current_epoch,
-                                                                               np.mean(val_loss_list),
+            val_loss_list.append(val_loss.item())
+            val_acc_list.append(self.metrics.accuracy(y, y_pred).item())
+        print('Validation loss : {:.5f} - Validation Accuracy : {:.2f}'.format(np.mean(val_loss_list),
                                                                                np.mean(val_acc_list)))
+
         if self.best_auc < np.mean(val_acc_list):
             self.best_auc = np.mean(val_acc_list)
             self.save_checkpoint()
+        return val_loss_list
 
     def save_checkpoint(self):
         os.makedirs('checkpoints', exist_ok=True)
