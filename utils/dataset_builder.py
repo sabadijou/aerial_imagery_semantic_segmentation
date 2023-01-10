@@ -13,13 +13,11 @@ class Builder:
                                                                                generator=torch.Generator().manual_seed(101))
         self.train_dataloader = torch.utils.data.DataLoader(self.train_dataset,
                                                             batch_size=batch_size,
-                                                            shuffle=True,
-                                                            num_workers=workers)
+                                                            shuffle=True)
 
         self.test_dataloader = torch.utils.data.DataLoader(self.test_dataset,
                                                            batch_size=batch_size,
-                                                           shuffle=False,
-                                                           num_workers=workers)
+                                                           shuffle=False)
 
     def get_test_dataloader(self):
         return self.test_dataloader
