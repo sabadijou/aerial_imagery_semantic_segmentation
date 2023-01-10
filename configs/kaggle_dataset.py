@@ -39,7 +39,7 @@ img_height = 288
 img_width = 800
 cut_height = 240
 
-dataset_path = './data/CULane'
+dataset_path = r'D:\Datasets\image\areal\Semantic segmentation dataset'
 dataset = dict(
     train=dict(
         type='CULane',
