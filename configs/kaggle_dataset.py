@@ -1,10 +1,8 @@
-backbone = dict(
-    type='ResNetWrapper',
-    resnet='resnet50',
+unet = dict(
+    backbone='resnet34',
     pretrained=True,
-    replace_stride_with_dilation=[False, True, True],
-    out_conv=True,
-    fea_stride=8,
+    encoder_depth=5,
+    input_ch=3
 )
 
 optimizer = dict(
@@ -14,9 +12,9 @@ optimizer = dict(
   weight_decay=1e-4,
 )
 
-epochs = 12
-batch_size = 8
-
+epochs = 100
+batch_size = 4
+world_size=1
 
 scheduler = dict(
     step_size=1,
@@ -39,12 +37,7 @@ cut_height = 240
 
 dataset_path = r'D:\Datasets\image\areal\Semantic segmentation dataset'
 dataset = dict(
-    train=dict(
-        type='',
-        img_path=dataset_path,
-        data_list=''
-
-)
+        train_test_split=0.1
 )
 
 workers = 1
