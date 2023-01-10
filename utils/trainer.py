@@ -2,6 +2,8 @@ from dataset.dataset import ArealDataset
 from dataset_builder import Builder
 from losses import ArealLoss
 from optimizer import ArealOptim
+from evaluation import Metrics
+
 
 class Trainer:
     def __init__(self, cfg, model, ds_root, world_size=1, epochs=100,
@@ -21,6 +23,7 @@ class Trainer:
         self.criterion = ArealLoss(num_classes=num_classes)
         self.optimizer_builder = ArealOptim(cfg, model.parameters())
         self.optimizer = self.optimizer_builder.net_optimizer
+        self.metrics = Metrics()
 
     def run_train(self):
         self.model.train()
@@ -37,4 +40,4 @@ class Trainer:
             loss.backward()
             self.optimizer.step()
             batch_loss_list.append(loss.cpu().detach().numpy())
-            auc_list.append(acc(y, pred_mask).numpy())
+            auc_list.append(self.metrics.accuracy(y, y_pred).numpy())
