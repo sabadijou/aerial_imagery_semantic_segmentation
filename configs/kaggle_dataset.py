@@ -1,4 +1,3 @@
-
 backbone = dict(
     type='ResNetWrapper',
     resnet='resnet50',
@@ -8,12 +7,11 @@ backbone = dict(
     fea_stride=8,
 )
 
-
 optimizer = dict(
-  type='sgd',
-  lr=0.025,
+  type='Adam',
+  lr=1e-3,
+  momentum=0.9,
   weight_decay=1e-4,
-  momentum=0.9
 )
 
 epochs = 12
@@ -48,7 +46,6 @@ dataset = dict(
 
 )
 )
-
 
 workers = 1
 num_classes = 6
