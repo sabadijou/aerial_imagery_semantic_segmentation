@@ -35,11 +35,12 @@ img_height = 512
 img_width = 512
 
 
-dataset_path = r'D:\Datasets\image\areal\Semantic segmentation dataset'
+dataset_path = r'D:\Datasets\image\areal\Semantic_segmentation_dataset'
 dataset = dict(
         train_test_split=0.1
 )
-
+device = 'cuda'
+gpus = 0
 workers = 1
 num_classes = 6
 current_epoch = 0
