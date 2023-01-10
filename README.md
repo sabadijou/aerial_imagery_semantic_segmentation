@@ -68,7 +68,7 @@ PyTorch implementation of UNet for semantic segmentation of aerial imagery
 
   ## Demo
 1. Inference Demo with a Pre-trained model.
-   You can download a pretrain model from here and customize the following command to run the demo 
+   You can download our pretrain weights from [here](https://drive.google.com/file/d/1PkwkcttiLyyAkt45SuGWBmR5nUu9_CDf/view?usp=share_link) and customize the following command to run the demo 
   ```Shell
   python demo.py --checkpoint checkpoints/best.pth --image_path demo/sample_1.jpg --fname demo/result_1.jpg --gpu_id 0
   ```
